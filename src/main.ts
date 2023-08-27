@@ -1,21 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import * as express from 'express';
-import morgan from 'morgan';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    // init logger
+    logger: new Logger(),
+  });
   const configService = app.get(ConfigService);
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
-  app.use(morgan('tiny'));
+  app.use(bodyParser.json());
+  app.use(
+    bodyParser.urlencoded({
+      extended: true,
+    }),
+  );
   app.use(cors());
   app.use(
     helmet({
@@ -33,7 +37,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const port = configService.get<number>('app.port');
-
   await app.listen(port);
 }
 bootstrap();

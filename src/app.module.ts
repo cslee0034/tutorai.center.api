@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { env, validationSchema } from './config/env';
+import { env, validationSchema } from './config/env.config';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { WinstonModule } from 'nest-winston';
+import { winstonTransports } from 'src/config/logger.config';
 
 @Module({
   imports: [
@@ -15,8 +18,15 @@ import { env, validationSchema } from './config/env';
         abortEarly: true, // 유효성 검사 과정 중 처음 오류 발생 즉시 중지
       },
     }),
+    WinstonModule.forRoot({
+      transports: winstonTransports,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
