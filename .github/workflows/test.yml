@@ -1,0 +1,45 @@
+name: Test Slack Message
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  test:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Save newly committed messages
+        env:
+          BEFORE_REF: ${{ github.event.before }}
+          AFTER_REF: ${{ github.event.after }}
+        run: |
+          COMMIT_MSG_STR=$(git log --pretty=format:%s "$BEFORE_REF...$AFTER_REF" | python3 -c "import sys; print(sys.stdin.read().replace('\n', ' <- '))")
+          echo "commit_msg_str=$COMMIT_MSG_STR" >> $GITHUB_ENV
+
+      - name: test-notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,author
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'good',
+                text: `${process.env.AS_WORKFLOW} by ${process.env.AS_AUTHOR}`,
+                fields: [{
+                  title: 'Starting Test : ',
+                  value: `${{ env.commit_msg_str }}`,
+                  short: false
+                }]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
