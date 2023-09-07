@@ -3,7 +3,6 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import bodyParser from 'body-parser';
-import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
@@ -11,6 +10,7 @@ import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new Logger(),
+    cors: true,
   });
   const configService = app.get(ConfigService);
   app.use(bodyParser.json());
@@ -19,7 +19,6 @@ async function bootstrap() {
       extended: true,
     }),
   );
-  app.use(cors());
   app.use(
     helmet({
       contentSecurityPolicy: false,
