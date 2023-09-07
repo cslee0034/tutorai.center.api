@@ -1,19 +1,18 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    // init logger
     logger: new Logger(),
   });
   const configService = app.get(ConfigService);
-
   app.use(bodyParser.json());
   app.use(
     bodyParser.urlencoded({
@@ -35,6 +34,7 @@ async function bootstrap() {
   app.use(limiter);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new AllExceptionsFilter(app.get('winston')));
 
   const port = configService.get<number>('app.port');
   await app.listen(port);
