@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { env } from './config/env.config';
@@ -19,8 +19,12 @@ import { winstonTransports } from 'src/config/logger.config';
         abortEarly: true, // 유효성 검사 과정 중 처음 오류 발생 즉시 중지
       },
     }),
-    WinstonModule.forRoot({
-      transports: winstonTransports,
+    WinstonModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        transports: winstonTransports(config),
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
