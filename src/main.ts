@@ -8,8 +8,9 @@ import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
 import { Limiter } from 'src/config/limiter.config';
 
 async function bootstrap() {
+  const initLogger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, {
-    logger: new Logger(),
+    logger: initLogger,
     cors: true,
   });
   const configService = app.get(ConfigService);
@@ -26,5 +27,7 @@ async function bootstrap() {
 
   const port = configService.get<number>('app.port');
   await app.listen(port);
+
+  initLogger.log(`center.api is listening on port ${port}`);
 }
 bootstrap();
