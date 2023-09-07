@@ -4,8 +4,8 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
 import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
+import { Limiter } from 'src/config/limiter.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -24,14 +24,7 @@ async function bootstrap() {
       contentSecurityPolicy: false,
     }),
   );
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 분 동안
-    max: 10000, // 각각의 IP의 요청 10000회로 제한
-    standardHeaders: true, // `RateLimit-*` headers로 횟수 제한 정보를 알림
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  });
-  app.use(limiter);
-
+  app.use(new Limiter());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter(app.get('winston')));
 
