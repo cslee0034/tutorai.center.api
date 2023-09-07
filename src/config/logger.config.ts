@@ -13,7 +13,7 @@ const dailyOptions = (level: string) => {
     zippedArchive: true,
     format: winston.format.combine(
       winston.format.timestamp(),
-      utilities.format.nestLike(process.env.NODE_ENV, {
+      utilities.format.nestLike('center.api', {
         colors: false,
         prettyPrint: true,
       }),
