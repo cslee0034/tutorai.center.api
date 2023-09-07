@@ -22,7 +22,7 @@ const dailyOptions = (level: string) => {
 
 export const winstonTransports = [
   new winston.transports.Console({
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.timestamp(),

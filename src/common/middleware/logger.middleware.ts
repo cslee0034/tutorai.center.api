@@ -16,10 +16,9 @@ export class LoggerMiddleware implements NestMiddleware {
 
     response.on('finish', () => {
       const { statusCode } = response;
-      this.logger.log({
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-        message: `${method} ${originalUrl} ${statusCode} ${ip} ${userAgent}`,
-      });
+      this.logger.info(
+        `${method} ${originalUrl} ${statusCode} ${ip} ${userAgent}`,
+      );
     });
 
     next();

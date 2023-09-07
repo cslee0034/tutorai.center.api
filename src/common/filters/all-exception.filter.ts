@@ -33,8 +33,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
     `);
 
     response.status(status).json({
-      status_code: '09',
-      status_name: '오류',
       status: status,
       message: errorMessage,
       path: request.url,
