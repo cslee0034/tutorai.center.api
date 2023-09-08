@@ -1,19 +1,22 @@
 import { NestFactory } from '@nestjs/core';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
-import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
 import { Limiter } from 'src/config/limiter.config';
+import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
+import { HttpAdapterHost } from '@nestjs/core';
 
 async function bootstrap() {
-  const initLogger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, {
-    logger: initLogger,
     cors: true,
   });
+
+  const logger = app.get('winston');
   const configService = app.get(ConfigService);
+  const httpAdapterHost = app.get(HttpAdapterHost);
+
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ limit: '10mb', extended: true }));
   app.use(
@@ -23,11 +26,11 @@ async function bootstrap() {
   );
   app.use(new Limiter());
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new AllExceptionsFilter(app.get('winston')));
+  app.useGlobalFilters(new AllExceptionsFilter(logger, httpAdapterHost));
 
   const port = configService.get<number>('app.port');
   await app.listen(port);
 
-  initLogger.log(`center.api is listening on port ${port}`);
+  logger.info(`center.api is listening on port ${port}`);
 }
 bootstrap();
