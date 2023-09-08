@@ -7,39 +7,45 @@ import {
   Logger,
   Inject,
 } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
+    const { httpAdapter } = this.httpAdapterHost;
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
     const errorMessage = (exception as any)?.message || 'Internal server error';
-    const stack = (exception as any)?.stack;
-    const status =
+    const errorStack = (exception as any)?.stack || 'Error stack not found';
+    const httpStatus =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    const date = new Date().toISOString();
+    const timestamp = new Date().toISOString();
 
     this.logger.error(`
-    Date: ${date}
+    Status: ${httpStatus}
+    Message: ${errorMessage}
+    Timestamp: ${timestamp}
     Path: ${request.url}
-    Status: ${status}
-    Error: ${errorMessage}
-    Stack: ${stack}
+    Stack: ${errorStack}
     `);
 
-    response.status(status).json({
-      status: status,
+    const responseBody = {
+      statusCode: httpStatus,
       message: errorMessage,
-      path: request.url,
-      date: date,
-    });
+      timestamp: timestamp,
+      path: httpAdapter.getRequestUrl(request),
+    };
+
+    httpAdapter.reply(response, responseBody, httpStatus);
   }
 }
