@@ -16,7 +16,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
-    // http, socket, gRPC 등에 대응 가능 하도록 httpAdapterHost의 adapter 사용
+    /**
+     * https://docs.nestjs.com/exception-filters
+     * http, socket, gRPC 등에 대응 가능 하도록 httpAdapterHost의 adapter 사용
+     */
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
