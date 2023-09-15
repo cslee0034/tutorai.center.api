@@ -4,20 +4,19 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
-  Logger,
-  Inject,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { LoggerService } from 'src/infrastructure/logger/logger.service';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    private readonly logger: LoggerService,
     private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
+    // http, socket, gRPC 등에 대응 가능 하도록 httpAdapterHost의 adapter 사용
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
