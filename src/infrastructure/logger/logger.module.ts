@@ -4,7 +4,7 @@ import { WinstonModule } from 'nest-winston';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { winstonTransports } from 'src/config/logger.config';
 
-@Global() // 전역에서 LoggerService를 사용할 수 있게 해서 중복 코드 제거
+@Global() // 전역에서 LoggerService를 이용할 수 있도록 해서 코드 중복 제거
 @Module({
   imports: [
     WinstonModule.forRootAsync({

@@ -4,14 +4,16 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Logger,
+  Inject,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { LoggerService } from 'src/infrastructure/logger/logger.service';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
-    private readonly logger: LoggerService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
