@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { env } from './config/env.config';
-import { validationSchema } from 'src/config/env.validator';
+import { validationSchema } from './config/env.validator';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { LoggerModule } from 'src/infrastructure/logger/logger.module';
+import { LoggerModule } from './infrastructure/logger/logger.module';
 
 @Module({
   imports: [
