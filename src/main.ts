@@ -29,6 +29,8 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(logger, httpAdapterHost));
 
   const port = configService.get<number>('app.port');
+
+  app.setGlobalPrefix('api/v1');
   await app.listen(port);
 
   logger.info(`center.api is listening on port ${port}`);
