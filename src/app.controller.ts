@@ -1,6 +1,5 @@
-import { Body, Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { TimingInterceptor } from './common/interceptor/timing.interceptor';
 import { LoggerService } from './infrastructure/logger/logger.service';
 
 @Controller()
@@ -11,7 +10,6 @@ export class AppController {
   ) {}
 
   @Get()
-  @UseInterceptors(TimingInterceptor)
   getHello(): string {
     return this.appService.getHello();
   }
