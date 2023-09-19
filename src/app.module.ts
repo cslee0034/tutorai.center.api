@@ -6,6 +6,7 @@ import { env } from './config/env.config';
 import { validationSchema } from './config/env.validator';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggerModule } from './infrastructure/logger/logger.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { LoggerModule } from './infrastructure/logger/logger.module';
       },
     }),
     LoggerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
