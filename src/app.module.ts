@@ -6,6 +6,7 @@ import { env } from './config/env.config';
 import { validationSchema } from './config/env.validator';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggerModule } from './infrastructure/logger/logger.module';
+import { HttpRequestModule as HttpModule } from './infrastructure/http/http.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
       },
     }),
     LoggerModule,
+    HttpModule,
     AuthModule,
   ],
   controllers: [AppController],
