@@ -30,7 +30,7 @@ async function bootstrap() {
 
   const port = configService.get<number>('app.port');
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('v1');
   await app.listen(port);
 
   logger.info(`center.api is listening on port ${port}`);
