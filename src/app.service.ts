@@ -23,5 +23,7 @@ export class AppService {
 
     this.logger.info(`Last value is ${JSON.stringify(lastValue)}`);
     this.logger.info(`User ID is ${lastValue.userId}`);
+
+    return lastValue;
   }
 }
