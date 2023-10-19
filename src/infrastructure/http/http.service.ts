@@ -11,10 +11,9 @@ export class HTTPService {
   private readonly getErrorMessage = (e: any) => {
     return (
       e.message ||
+      e.response?.data ||
       e.response?.data?.message ||
-      (typeof e.response?.data === 'string'
-        ? e.response?.data
-        : 'Internal server error')
+      'Internal server error'
     );
   };
 
