@@ -7,7 +7,7 @@ import { validationSchema } from './config/env.validator';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggerModule } from './infrastructure/logger/logger.module';
 import { HttpRequestModule as HttpModule } from './infrastructure/http/http.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
