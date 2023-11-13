@@ -8,6 +8,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { LoggerModule } from './infrastructure/logger/logger.module';
 import { HttpRequestModule as HttpModule } from './infrastructure/http/http.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
     LoggerModule,
     HttpModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
