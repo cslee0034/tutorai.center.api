@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
-import { Limiter } from './config/limiter.config';
+import { Limiter } from './config/limiter';
 import { AllExceptionsFilter } from './common/filters/all-exception.filter';
 import { HttpAdapterHost } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
