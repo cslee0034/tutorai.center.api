@@ -9,6 +9,7 @@ import { LoggerModule } from './infrastructure/logger/logger.module';
 import { HttpRequestModule as HttpModule } from './infrastructure/http/http.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { RdbTypeOrmModule as TypeOrmModule } from './infrastructure/orm/rdb.typeorm.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     LoggerModule,
     HttpModule,
+    TypeOrmModule,
     AuthModule,
     UserModule,
   ],
