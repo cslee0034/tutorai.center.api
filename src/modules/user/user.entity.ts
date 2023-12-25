@@ -31,7 +31,6 @@ export class UserEntity {
 
   @Column({
     comment: 'The hashed password of the user',
-    select: false,
     length: 255,
   })
   password: string;
