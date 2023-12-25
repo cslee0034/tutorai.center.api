@@ -17,4 +17,10 @@ export const env = () => ({
     synchronize: process.env.RDB_SYNCHRONIZE,
     logging: process.env.RDB_LOGGING,
   },
+  cache: {
+    port: process.env.CACHE_PORT,
+  },
+  encrypt: {
+    salt: process.env.ENCRYPT_SALT,
+  },
 });
