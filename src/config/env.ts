@@ -13,12 +13,14 @@ export const env = () => ({
     port: +process.env.RDB_PORT,
     username: process.env.RDB_USERNAME,
     password: process.env.RDB_PASSWORD,
-    name: process.env.RDB_NAME,
+    database: process.env.RDB_DATABASE,
     synchronize: process.env.RDB_SYNCHRONIZE,
     logging: process.env.RDB_LOGGING,
   },
   cache: {
+    host: process.env.CACHE_HOST,
     port: process.env.CACHE_PORT,
+    password: process.env.CACHE_PASSWORD,
   },
   encrypt: {
     salt: process.env.ENCRYPT_SALT,
