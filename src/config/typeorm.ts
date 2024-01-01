@@ -10,7 +10,7 @@ export const getTypeOrmConfig = (
     port: config.get('rdb.port'),
     username: config.get('rdb.username'),
     password: config.get('rdb.password'),
-    database: config.get('rdb.name'),
+    database: config.get('rdb.database'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     synchronize: config.get('rdb.synchronize') === 'true',
     logging: config.get('rdb.logging') === 'true',
