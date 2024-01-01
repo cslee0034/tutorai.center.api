@@ -14,10 +14,13 @@ services:
 
   redis:
     image: redis:latest
+    command: redis-server --requirepass ${CACHE_PASSWORD}
     ports:
       - '${CACHE_PORT}:${CACHE_PORT}'
     volumes:
       - redis_data:/data
+    environment:
+      REDIS_PASSWORD: ${CACHE_PASSWORD}
 
 volumes:
   postgres_data:
