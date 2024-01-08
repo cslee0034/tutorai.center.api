@@ -1,13 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
-import { UserRepository } from '../user/user.repository';
+import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly userRepository: UserRepository,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   private async comparePassword(
@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   public async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.usersRepository.findUserByEmail(email);
 
     if (user && (await this.comparePassword(password, user.password))) {
       return user;

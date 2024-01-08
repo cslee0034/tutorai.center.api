@@ -9,7 +9,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { RdbTypeOrmModule as TypeOrmModule } from './infrastructure/orm/rdb.typeorm.module';
 import { JWTModule } from './infrastructure/token/jwt.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { UserModule } from './modules/user/user.module';
     TypeOrmModule,
     JWTModule,
     AuthModule,
-    UserModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

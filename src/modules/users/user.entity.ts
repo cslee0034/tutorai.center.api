@@ -7,7 +7,7 @@ interface Location {
 }
 
 @Entity({
-  name: 'user_profile',
+  name: 'user_profiles',
   orderBy: {
     createdAt: 'ASC',
   },
