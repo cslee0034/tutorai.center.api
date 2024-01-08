@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: ${RDB_USERNAME}
       POSTGRES_PASSWORD: ${RDB_PASSWORD}
-      POSTGRES_DB: ${RDB_NAME}
+      POSTGRES_DB: ${RDB_DATABASE}
     ports:
       - '${RDB_PORT}:${RDB_PORT}'
     volumes:

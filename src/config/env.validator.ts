@@ -13,6 +13,10 @@ export const validationSchema = Joi.object({
   RDB_DATABASE: Joi.string().required(),
   RDB_SYNCHRONIZE: Joi.boolean().required(),
   RDB_LOGGING: Joi.boolean().required(),
+  CACHE_HOST: Joi.string().required(),
   CACHE_PORT: Joi.number().required(),
+  CACHE_PASSWORD: Joi.string().required(),
   ENCRYPT_SALT: Joi.number().required(),
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRES_IN: Joi.string().required(),
 });

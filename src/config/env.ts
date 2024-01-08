@@ -1,6 +1,6 @@
 export const env = () => ({
   app: {
-    node: process.env.NODE_ENV,
+    env: process.env.NODE_ENV,
     host: process.env.CENTER_API_HOST,
     port: +process.env.CENTER_API_PORT,
   },
@@ -24,5 +24,9 @@ export const env = () => ({
   },
   encrypt: {
     salt: process.env.ENCRYPT_SALT,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN,
   },
 });

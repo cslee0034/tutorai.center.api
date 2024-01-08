@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 
 export const getJwtConfig = (configService: ConfigService) => ({
-  secret: configService.get('JWT_SECRET'),
-  signOptions: { expiresIn: configService.get('JWT_EXPIRATION') },
+  secret: configService.get('jwt.secret'),
+  signOptions: { expiresIn: configService.get('jwt.expiresIn') },
 });
