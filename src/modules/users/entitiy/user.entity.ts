@@ -1,6 +1,12 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-interface Location {
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
+}
+
+export interface Location {
   country: string;
   city: string;
   district: string;
@@ -20,26 +26,29 @@ export class UserEntity {
     comment: 'The email address of the user',
     unique: true,
     length: 30,
+    nullable: false,
   })
   email: string;
 
   @Column({
     comment: 'The full name of the user',
     length: 30,
+    nullable: false,
   })
   name: string;
 
   @Column({
     comment: 'The hashed password of the user',
     length: 255,
+    nullable: false,
   })
   password: string;
 
   @Column({
     comment: 'The gender of the user',
     type: 'enum',
-    enum: ['Male', 'Female', 'Other'],
-    default: 'Other',
+    enum: Gender,
+    default: Gender.Other,
   })
   gender: string;
 
@@ -52,8 +61,8 @@ export class UserEntity {
 
   @Column({
     comment: 'The biography of the user',
-    nullable: true,
     type: 'text',
+    nullable: true,
   })
   biography: string;
 
