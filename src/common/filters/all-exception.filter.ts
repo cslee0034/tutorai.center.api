@@ -9,47 +9,49 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import ErrorResponseType from './error-response-type';
 
-@Catch()
+@Catch(HttpException)
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
-  catch(exception: unknown, host: ArgumentsHost): void {
-    /**
-     * https://docs.nestjs.com/exception-filters
-     * http, socket, gRPC 등에 대응 가능 하도록 httpAdapterHost의 adapter 사용
-     */
+  catch(exception: HttpException, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    const errorMessage = (exception as any)?.message || 'Internal server error';
-    const errorStack = (exception as any)?.stack || 'Error stack not found';
-    const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const exception_response =
+      exception.getResponse() as HttpException['response'];
+
+    const message = exception_response?.message || '';
+    const error = exception_response?.error || 'Internal server error';
+    const stack = exception_response?.stack || 'Error stack not found';
+    const httpStatus = exception
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
     const timestamp = new Date().toISOString();
 
     this.logger.error(`
     Status: ${httpStatus}
-    Message: ${errorMessage}
+    Message: ${message}
+    Error: ${error}
     Timestamp: ${timestamp}
     Path: ${request.url}
-    Stack: ${errorStack}
+    Stack: ${stack}
     `);
 
     const responseBody = {
       statusCode: httpStatus,
-      message: errorMessage,
+      message: message,
+      error: error,
       timestamp: timestamp,
       path: httpAdapter.getRequestUrl(request),
-    };
+    } as ErrorResponseType;
 
-    httpAdapter.reply(response, responseBody, httpStatus);
+    response.status(httpStatus).json(responseBody);
   }
 }
