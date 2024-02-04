@@ -44,6 +44,7 @@ export class UserEntity {
     type: 'enum',
     enum: Gender,
     default: Gender.Other,
+    nullable: true,
   })
   gender: string;
 
