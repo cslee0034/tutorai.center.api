@@ -1,5 +1,4 @@
 import { UserEntity } from './user.entity';
-import { Location } from './user.entity';
 import { Gender } from '../enum/user.enum';
 
 export class UserBuilder extends UserEntity {
@@ -20,11 +19,6 @@ export class UserBuilder extends UserEntity {
 
   setGender(gender: Gender) {
     this.gender = gender;
-    return this;
-  }
-
-  setCurrentLocation(location: Location) {
-    this.current_location = location;
     return this;
   }
 

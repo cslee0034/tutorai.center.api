@@ -20,11 +20,6 @@ describe('AuthService', () => {
         .setEmail(email)
         .setPassword('securedPassword')
         .setGender(Gender.Male)
-        .setCurrentLocation({
-          country: 'South Korea',
-          city: 'Seoul',
-          district: 'Gangnam',
-        })
         .setBiography('Hello World')
         .setAvatar('http://example.com/avatar.jpg')
         .build();

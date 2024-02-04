@@ -1,11 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Gender } from '../enum/user.enum';
-
-export interface Location {
-  country: string;
-  city: string;
-  district: string;
-}
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'user_profiles',
@@ -14,9 +9,11 @@ export interface Location {
   },
 })
 export class UserEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn({ comment: 'The auto-incremented id of the user' })
   id: number;
 
+  @ApiProperty()
   @Column({
     comment: 'The email address of the user',
     unique: true,
@@ -25,6 +22,7 @@ export class UserEntity {
   })
   email: string;
 
+  @ApiProperty()
   @Column({
     comment: 'The full name of the user',
     length: 30,
@@ -32,6 +30,7 @@ export class UserEntity {
   })
   name: string;
 
+  @ApiProperty()
   @Column({
     comment: 'The hashed password of the user',
     length: 255,
@@ -39,6 +38,7 @@ export class UserEntity {
   })
   password: string;
 
+  @ApiProperty()
   @Column({
     comment: 'The gender of the user',
     type: 'enum',
@@ -47,13 +47,16 @@ export class UserEntity {
   })
   gender: string;
 
-  @Column({
-    type: 'jsonb', // json과 다르게 indexing이 가능하다.
-    comment: 'The current location of the user',
-    nullable: true,
-  })
-  current_location: Location;
+  // TODO: City와의 관계로 나타내기
+  // @ApiProperty()
+  // @Column({
+  //   type: 'jsonb', // json과 다르게 indexing이 가능하다.
+  //   comment: 'The current location of the user',
+  //   nullable: true,
+  // })
+  // current_location: Location;
 
+  @ApiProperty()
   @Column({
     comment: 'The biography of the user',
     type: 'text',
@@ -61,6 +64,7 @@ export class UserEntity {
   })
   biography: string;
 
+  @ApiProperty()
   @Column({
     comment: 'The avatar of the user',
     type: 'text',
@@ -68,6 +72,7 @@ export class UserEntity {
   })
   avatar: string;
 
+  @ApiProperty()
   @Column({
     comment: 'The created date of the user',
     type: 'timestamp',
@@ -75,6 +80,7 @@ export class UserEntity {
   })
   createdAt: Date;
 
+  @ApiProperty()
   @Column({
     comment: 'The updated date of the user',
     type: 'timestamp',
