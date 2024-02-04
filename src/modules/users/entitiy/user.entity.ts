@@ -65,6 +65,7 @@ export class UserEntity {
   })
   biography: string;
 
+  // TODO: 기본 이미지 설정
   @ApiProperty()
   @Column({
     comment: 'The avatar of the user',
