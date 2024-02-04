@@ -8,19 +8,19 @@ export class LoggerService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
-  public debug(message: any) {
+  public debug(message: string) {
     this.logger.debug(message);
   }
 
-  public info(message: any) {
+  public info(message: string) {
     this.logger.info(message);
   }
 
-  public warn(message: any) {
+  public warn(message: string) {
     this.logger.warn(message);
   }
 
-  public error(message: any) {
+  public error(message: string) {
     this.logger.error(message);
   }
 }
