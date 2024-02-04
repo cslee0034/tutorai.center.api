@@ -1,10 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum Gender {
-  Male = 'Male',
-  Female = 'Female',
-  Other = 'Other',
-}
+import { Gender } from '../enum/user.enum';
 
 export interface Location {
   country: string;

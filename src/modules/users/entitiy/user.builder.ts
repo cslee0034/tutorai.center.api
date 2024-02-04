@@ -1,6 +1,6 @@
 import { UserEntity } from './user.entity';
 import { Location } from './user.entity';
-import { Gender } from './user.entity';
+import { Gender } from '../enum/user.enum';
 
 export class UserBuilder extends UserEntity {
   constructor() {

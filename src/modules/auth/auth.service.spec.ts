@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
 import { UsersRepository } from '../users/users.repository';
 import { UserBuilder } from '../users/entitiy/user.builder';
-import { Gender } from '../users/entitiy/user.entity';
+import { Gender } from '../users/enum/user.enum';
 
 describe('AuthService', () => {
   let service: AuthService;
