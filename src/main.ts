@@ -35,8 +35,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerOptions);
   SwaggerModule.setup('api', app, document);
 
-  app.use(json({ limit: '10mb' }));
-  app.use(urlencoded({ limit: '10mb', extended: true }));
+  app.use(json());
+  app.use(urlencoded({ extended: true }));
   app.use(
     helmet({
       contentSecurityPolicy: false,
