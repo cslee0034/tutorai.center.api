@@ -46,7 +46,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter(logger, httpAdapterHost));
 
-  app.setGlobalPrefix('/v1');
   await app.listen(port);
 
   logger.info(`center.api is listening on port ${port}`);
