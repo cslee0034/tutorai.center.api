@@ -8,6 +8,7 @@ import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { RdbTypeOrmModule as TypeOrmModule } from './library/orm/rdb.typeorm.module';
 import { JWTModule } from './library/token/jwt.module';
+import { JWTPassportModule as PassportModule } from './library/token/passport.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JWTModule } from './library/token/jwt.module';
     LoggerModule,
     TypeOrmModule,
     JWTModule,
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
