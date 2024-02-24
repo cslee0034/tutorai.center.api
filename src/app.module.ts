@@ -6,7 +6,6 @@ import { CacheRedisModule as RedisModule } from './library/cache/cache.redis.mod
 import { HttpRequestModule as HttpModule } from './library/http/http.module';
 import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { RdbTypeOrmModule as TypeOrmModule } from './library/orm/rdb.typeorm.module';
 import { JWTModule } from './library/token/jwt.module';
 import { JWTPassportModule as PassportModule } from './library/token/passport.module';
 
@@ -16,7 +15,6 @@ import { JWTPassportModule as PassportModule } from './library/token/passport.mo
     RedisModule,
     HttpModule,
     LoggerModule,
-    TypeOrmModule,
     JWTModule,
     PassportModule,
   ],
