@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { HTTPService } from './infrastructure/http/http.service';
-import { LoggerService } from './infrastructure/logger/logger.service';
+import { HTTPService } from './library/http/http.service';
+import { LoggerService } from './library/logger/logger.service';
 import { lastValueFrom, map, tap } from 'rxjs';
 import { AxiosResponse } from 'axios';
 

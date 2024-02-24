@@ -1,13 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GlobalConfigModule as ConfigModule } from './infrastructure/config/config.module';
-import { CacheRedisModule as RedisModule } from './infrastructure/cache/cache.redis.module';
-import { HttpRequestModule as HttpModule } from './infrastructure/http/http.module';
-import { LoggerModule } from './infrastructure/logger/logger.module';
+import { GlobalConfigModule as ConfigModule } from './library/config/config.module';
+import { CacheRedisModule as RedisModule } from './library/cache/cache.redis.module';
+import { HttpRequestModule as HttpModule } from './library/http/http.module';
+import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { RdbTypeOrmModule as TypeOrmModule } from './infrastructure/orm/rdb.typeorm.module';
-import { JWTModule } from './infrastructure/token/jwt.module';
+import { RdbTypeOrmModule as TypeOrmModule } from './library/orm/rdb.typeorm.module';
+import { JWTModule } from './library/token/jwt.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 

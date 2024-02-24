@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { LoggerService } from './infrastructure/logger/logger.service';
+import { LoggerService } from './library/logger/logger.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller()
