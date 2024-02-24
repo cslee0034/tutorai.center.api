@@ -8,8 +8,6 @@ import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { RdbTypeOrmModule as TypeOrmModule } from './library/orm/rdb.typeorm.module';
 import { JWTModule } from './library/token/jwt.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -19,8 +17,6 @@ import { UsersModule } from './modules/users/users.module';
     LoggerModule,
     TypeOrmModule,
     JWTModule,
-    AuthModule,
-    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
