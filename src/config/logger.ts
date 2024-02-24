@@ -3,7 +3,7 @@ import { utilities } from 'nest-winston';
 import * as winston from 'winston';
 import winstonDaily from 'winston-daily-rotate-file';
 
-const dailyOptions = (level: string) => {
+const dailyOptions = (level: string, serverName: string) => {
   return {
     level,
     datePattern: 'YYYY-MM-DD',
@@ -13,7 +13,7 @@ const dailyOptions = (level: string) => {
     zippedArchive: true,
     format: winston.format.combine(
       winston.format.timestamp(),
-      utilities.format.nestLike('center.api', {
+      utilities.format.nestLike(`${serverName}.api`, {
         colors: false,
         prettyPrint: true,
       }),
@@ -27,11 +27,15 @@ export const winstonTransports = (config: ConfigService) => [
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.timestamp(),
-      utilities.format.nestLike('center.api', {
+      utilities.format.nestLike(`${config.get<string>('app.serverName')}.api`, {
         prettyPrint: true,
       }),
     ),
   }),
-  new winstonDaily(dailyOptions('warn')),
-  new winstonDaily(dailyOptions('error')),
+  new winstonDaily(
+    dailyOptions('warn', `${config.get<string>('app.serverName')}.api`),
+  ),
+  new winstonDaily(
+    dailyOptions('error', `${config.get<string>('app.serverName')}.api`),
+  ),
 ];

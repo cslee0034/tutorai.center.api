@@ -1,8 +1,9 @@
 export const env = () => ({
   app: {
     env: process.env.NODE_ENV,
-    host: process.env.CENTER_API_HOST,
-    port: +process.env.CENTER_API_PORT,
+    serverName: process.env.SERVER_NAME,
+    host: process.env.NAEYEOP_API_HOST,
+    port: +process.env.NAEYEOP_API_PORT,
   },
   http: {
     timeout: process.env.HTTP_TIMEOUT,
