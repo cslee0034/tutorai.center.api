@@ -21,7 +21,9 @@ async function bootstrap() {
 
   const swaggerOptions = new DocumentBuilder()
     .setTitle(`${configService.get<string>('app.serverName')}`)
-    .setDescription('nomadia API description')
+    .setDescription(
+      `${configService.get<string>('app.serverName')} API description`,
+    )
     .setVersion('1.0.0')
     .setContact(
       'cslee0034',
