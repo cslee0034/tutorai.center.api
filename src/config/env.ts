@@ -17,6 +17,7 @@ export const env = () => ({
     database: process.env.RDB_DATABASE,
     synchronize: process.env.RDB_SYNCHRONIZE,
     logging: process.env.RDB_LOGGING,
+    url: process.env.RDB_URL,
   },
   cache: {
     host: process.env.CACHE_HOST,

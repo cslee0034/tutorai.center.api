@@ -14,6 +14,7 @@ export const validationSchema = Joi.object({
   RDB_DATABASE: Joi.string().required(),
   RDB_SYNCHRONIZE: Joi.boolean().required(),
   RDB_LOGGING: Joi.boolean().required(),
+  RDB_URL: Joi.string().required(),
   CACHE_HOST: Joi.string().required(),
   CACHE_PORT: Joi.number().required(),
   CACHE_PASSWORD: Joi.string().required(),
