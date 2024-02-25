@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UesrsService } from './uesrs.service';
 import { CreateUesrDto } from './dto/create-uesr.dto';
 import { UpdateUesrDto } from './dto/update-uesr.dto';

@@ -4,6 +4,6 @@ import { UesrsController } from './uesrs.controller';
 
 @Module({
   controllers: [UesrsController],
-  providers: [UesrsService]
+  providers: [UesrsService],
 })
 export class UesrsModule {}
