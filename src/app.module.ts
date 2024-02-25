@@ -9,7 +9,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { PrismaModule } from './library/orm/prisma.module';
 import { JWTModule } from './library/token/jwt.module';
 import { JWTPassportModule as PassportModule } from './library/token/passport.module';
-import { UesrsModule } from './modules/uesrs/uesrs.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { UesrsModule } from './modules/uesrs/uesrs.module';
     PrismaModule,
     JWTModule,
     PassportModule,
-    UesrsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
