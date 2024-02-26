@@ -6,6 +6,7 @@ import { CacheRedisModule as RedisModule } from './library/cache/cache.redis.mod
 import { HttpRequestModule as HttpModule } from './library/http/http.module';
 import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { EventModule } from './library/message/event.module';
 import { PrismaModule } from './library/orm/prisma.module';
 import { JWTModule } from './library/token/jwt.module';
 import { JWTPassportModule as PassportModule } from './library/token/passport.module';
@@ -17,6 +18,7 @@ import { UsersModule } from './modules/users/users.module';
     RedisModule,
     HttpModule,
     LoggerModule,
+    EventModule,
     PrismaModule,
     JWTModule,
     PassportModule,
