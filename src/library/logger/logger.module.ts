@@ -9,8 +9,8 @@ import { winstonTransports } from '../../config/logger';
   imports: [
     WinstonModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        transports: winstonTransports(config),
+      useFactory: (configService: ConfigService) => ({
+        transports: winstonTransports(configService),
       }),
       inject: [ConfigService],
     }),

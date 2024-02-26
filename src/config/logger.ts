@@ -21,21 +21,25 @@ const dailyOptions = (level: string, serverName: string) => {
   };
 };
 
-export const winstonTransports = (config: ConfigService) => [
+export const winstonTransports = (configService: ConfigService) => [
   new winston.transports.Console({
-    level: config.get<string>('app.env') === 'production' ? 'info' : 'debug',
+    level:
+      configService.get<string>('app.env') === 'production' ? 'info' : 'debug',
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.timestamp(),
-      utilities.format.nestLike(`${config.get<string>('app.serverName')}.api`, {
-        prettyPrint: true,
-      }),
+      utilities.format.nestLike(
+        `${configService.get<string>('app.serverName')}.api`,
+        {
+          prettyPrint: true,
+        },
+      ),
     ),
   }),
   new winstonDaily(
-    dailyOptions('warn', `${config.get<string>('app.serverName')}.api`),
+    dailyOptions('warn', `${configService.get<string>('app.serverName')}.api`),
   ),
   new winstonDaily(
-    dailyOptions('error', `${config.get<string>('app.serverName')}.api`),
+    dailyOptions('error', `${configService.get<string>('app.serverName')}.api`),
   ),
 ];
