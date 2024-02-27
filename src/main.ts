@@ -25,7 +25,7 @@ async function bootstrap() {
     .setDescription(
       `${configService.get<string>('app.serverName')} API description`,
     )
-    .setVersion('1.0.0')
+    .setVersion('0.0.1')
     .setContact(
       'cslee0034',
       'https://hardworking-everyday.tistory.com/',
