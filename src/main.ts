@@ -31,7 +31,6 @@ async function bootstrap() {
       'https://hardworking-everyday.tistory.com/',
       'cslee0034@gmail.com',
     )
-    .addServer('/v1')
     .addTag(`${configService.get<string>('app.serverName')}.api`)
     .build();
 
