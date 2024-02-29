@@ -6,7 +6,7 @@ import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
 import { Limiter } from './config/limiter';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter';
-import { AllExceptionsFilter } from './common/filters/all-exception.filter';
+import { httpExceptionFilter } from './common/filters/http-exception.filter';
 import { HttpAdapterHost } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -57,7 +57,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(
     new PrismaClientExceptionFilter(logger),
-    new AllExceptionsFilter(logger, httpAdapterHost),
+    new httpExceptionFilter(logger),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
