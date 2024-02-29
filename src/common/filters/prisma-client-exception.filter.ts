@@ -3,11 +3,11 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
-  Logger,
   Inject,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
+import { Logger } from 'winston';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Catch(
