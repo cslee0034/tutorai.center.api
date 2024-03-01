@@ -10,6 +10,7 @@ import { EventModule } from './library/message/event.module';
 import { PrismaModule } from './library/orm/prisma.module';
 import { JWTModule } from './library/token/jwt.module';
 import { JWTPassportModule as PassportModule } from './library/token/passport.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -22,6 +23,7 @@ import { UsersModule } from './modules/users/users.module';
     PrismaModule,
     JWTModule,
     PassportModule,
+    AuthModule,
     UsersModule,
   ],
   controllers: [AppController],
