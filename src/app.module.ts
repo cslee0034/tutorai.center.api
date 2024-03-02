@@ -12,6 +12,7 @@ import { JWTModule } from './library/token/jwt.module';
 import { JWTPassportModule as PassportModule } from './library/token/passport.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { EncryptModule } from './modules/encrypt/encrypt.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './modules/users/users.module';
     JWTModule,
     PassportModule,
     AuthModule,
+    EncryptModule,
     UsersModule,
   ],
   controllers: [AppController],
