@@ -15,4 +15,10 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('singup', () => {
+    it('should be defined', () => {
+      expect(service.signup).toBeDefined();
+    });
+  });
 });
