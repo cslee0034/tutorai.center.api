@@ -66,5 +66,11 @@ describe('AuthController', () => {
     it('should be defined', () => {
       expect(controller.signin).toBeDefined();
     });
+
+    it('should be called with SignInDto', async () => {
+      await controller.signin(mockSignInDto as SignInDto);
+
+      expect(mockAuthSerivce.signin).toBeCalledWith(mockSignInDto);
+    });
   });
 });
