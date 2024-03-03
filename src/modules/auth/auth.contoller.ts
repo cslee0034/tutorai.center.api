@@ -4,6 +4,7 @@ import { SignUpDto } from './dto/signup.dto';
 import { Tokens } from './types/tokens.type';
 import { AuthGuard } from '@nestjs/passport';
 import { SignInDto } from './dto/signin.dto';
+import { GetTokenUserId } from '../../common/decorator/get-token-user-id.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -20,9 +21,8 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('local/test')
-  test(@Req() req: Request) {
-    console.log(req);
-    return;
+  @Get('logout')
+  logout(@GetTokenUserId() userId: number): Promise<{ success: true }> {
+    return this.authService.logout(userId);
   }
 }

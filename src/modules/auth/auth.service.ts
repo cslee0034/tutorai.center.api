@@ -58,6 +58,20 @@ export class AuthService {
     return tokens;
   }
 
+  async logout(userId: number): Promise<{ success: true }> {
+    try {
+      await this.redisService.del(
+        `${this.configService.get<number>('jwt.refresh.prefix')}${userId}`,
+      );
+    } catch (error) {
+      throw new HttpException(
+        'Failed to logout',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return { success: true };
+  }
+
   async generateToken(userId: number, email: string): Promise<Tokens> {
     const payload = {
       sub: userId,
@@ -77,7 +91,7 @@ export class AuthService {
       ]);
 
       await this.redisService.set(
-        `refreshToken_${userId}`,
+        `${this.configService.get<number>('jwt.refresh.prefix')}${userId}`,
         refreshToken,
         this.configService.get<number>('jwt.refresh.expiresIn'),
       );
