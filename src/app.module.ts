@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GlobalConfigModule as ConfigModule } from './library/config/config.module';
-import { CacheModule } from './library/cache/cache.redis.module';
+import { RedisModule } from './library/cache/cache.redis.module';
 import { HttpRequestModule as HttpModule } from './library/http/http.module';
 import { LoggerModule } from './library/logger/logger.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
@@ -15,7 +15,7 @@ import { EncryptModule } from './modules/encrypt/encrypt.module';
 @Module({
   imports: [
     ConfigModule,
-    CacheModule,
+    RedisModule,
     HttpModule,
     LoggerModule,
     EventModule,

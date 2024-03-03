@@ -18,9 +18,10 @@ export const validationSchema = Joi.object({
   CACHE_HOST: Joi.string().required(),
   CACHE_PORT: Joi.number().required(),
   CACHE_PASSWORD: Joi.string().required(),
+  CACHE_TTL: Joi.number().required(),
   ENCRYPT_SALT: Joi.number().required(),
   JWT_ACCESS_SECRET: Joi.string().required(),
-  JWT_ACCESS_EXPIRES_IN: Joi.string().required(),
+  JWT_ACCESS_EXPIRES_IN: Joi.number().required(),
   JWT_REFRESH_SECRET: Joi.string().required(),
-  JWT_REFRESH_EXPIRES_IN: Joi.string().required(),
+  JWT_REFRESH_EXPIRES_IN: Joi.number().required(),
 });

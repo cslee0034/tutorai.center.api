@@ -23,6 +23,7 @@ export const env = () => ({
     host: process.env.CACHE_HOST,
     port: process.env.CACHE_PORT,
     password: process.env.CACHE_PASSWORD,
+    ttl: process.env.CACHE_TTL,
   },
   encrypt: {
     salt: process.env.ENCRYPT_SALT,

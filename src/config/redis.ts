@@ -1,12 +1,13 @@
-import { RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { ConfigService } from '@nestjs/config';
+import { redisStore } from 'cache-manager-redis-store';
 
-export const getRedisConfig = (config: ConfigService): RedisModuleOptions => {
+export const getRedisConfig = async (configService: ConfigService) => {
   return {
-    type: 'single',
-    url: `redis://${config.get('cache.host')}:${config.get('cache.port')}`,
-    options: {
-      password: config.get('cache.password'),
-    },
+    isGlobal: true,
+    store: redisStore,
+    host: configService.get<string>('cache.host'),
+    port: configService.get<string>('cache.port'),
+    password: configService.get<string>('cache.password'),
+    ttl: configService.get<number>('cache.ttl'),
   };
 };
