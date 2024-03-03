@@ -257,5 +257,16 @@ describe('AuthService', () => {
         `User's password do not match`,
       );
     });
+
+    it('should return token strings object', async () => {
+      const tokens = await service.signin(mockSignInDto);
+
+      expect(tokens).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        }),
+      );
+    });
   });
 });
