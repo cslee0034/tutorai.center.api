@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { Tokens } from './types/tokens.type';
 import { RedisService } from '../../library/cache/cache.redis.service';
 import { SignInDto } from './dto/signin.dto';
+import { EncryptService } from '../encrypt/encrypt.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly redisService: RedisService,
+    private readonly encryptService: EncryptService,
   ) {}
 
   async generateToken(userId: number, email: string): Promise<Tokens> {
@@ -68,6 +70,19 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+
+    const isMatchingPassword = await this.encryptService.compare(
+      signInDto.password,
+      existingUser.password,
+    );
+
+    if (!isMatchingPassword) {
+      throw new HttpException(
+        `User's password do not match`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     return;
   }
 }
