@@ -3,12 +3,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './users.repository';
 import { UserEntity } from './entities/user.entity';
+import { EncryptService } from '../encrypt/encrypt.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly encryptService: EncryptService,
+  ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const existUser = await this.userRepository.findOneByEmail(
       createUserDto.email,
     );
@@ -18,6 +22,10 @@ export class UsersService {
     }
 
     try {
+      createUserDto.password = await this.encryptService.hash(
+        createUserDto.password,
+      );
+
       return new UserEntity(await this.userRepository.create(createUserDto));
     } catch (error) {
       throw new HttpException(
