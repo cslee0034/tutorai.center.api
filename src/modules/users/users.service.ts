@@ -35,12 +35,18 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findOneByEmail(email: string): Promise<UserEntity | null> {
+    const existingUser = await this.userRepository.findOneByEmail(email);
+
+    if (existingUser) {
+      return new UserEntity(existingUser);
+    }
+
+    return null;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findAll() {
+    return `This action returns all users`;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
