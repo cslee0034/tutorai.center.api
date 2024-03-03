@@ -4,6 +4,7 @@ import { UserRepository } from './users.repository';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from '@prisma/client';
+import { EncryptService } from '../encrypt/encrypt.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -22,6 +23,12 @@ describe('UsersService', () => {
     }),
   };
 
+  const mockEncryptService = {
+    hash: jest.fn((key: string) => {
+      return 'hashed_' + key;
+    }),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -29,6 +36,10 @@ describe('UsersService', () => {
         {
           provide: UserRepository,
           useValue: mockUserRepository,
+        },
+        {
+          provide: EncryptService,
+          useValue: mockEncryptService,
         },
       ],
     }).compile();
@@ -46,6 +57,7 @@ describe('UsersService', () => {
       name: 'test_name',
       password: 'test_password',
     };
+
     it('should be defined', () => {
       expect(service.create).toBeDefined();
     });
@@ -66,9 +78,9 @@ describe('UsersService', () => {
       };
 
       // service.create()의 반환값인 promise를 테스트 대상으로 하여 내부에서 발생하는 예외를 확인한다
-      await expect(service.create(mockCreateUserDto)).rejects.toThrow(
-        'User already exists',
-      );
+      await expect(
+        service.create(mockCreateUserDto as CreateUserDto),
+      ).rejects.toThrow('User already exists');
     });
 
     it('should throw error if it fails to create user', async () => {
@@ -79,6 +91,30 @@ describe('UsersService', () => {
       await expect(service.create(mockCreateUserDto)).rejects.toThrow(
         'Failed to create user',
       );
+    });
+
+    it('should called with encrypted password', async () => {
+      const mockCreateUserDto = {
+        email: 'test@email.com',
+        name: 'test_name',
+        password: 'test_password',
+      };
+
+      await service.create(mockCreateUserDto as CreateUserDto);
+
+      expect(mockUserRepository.create).toBeCalledWith(
+        expect.objectContaining({
+          email: 'test@email.com',
+          name: 'test_name',
+          password: 'hashed_test_password',
+        }),
+      );
+    });
+
+    it('should return user entity', async () => {
+      const user = await service.create(mockCreateUserDto as CreateUserDto);
+
+      expect(user).toBeInstanceOf(UserEntity);
     });
   });
 });
