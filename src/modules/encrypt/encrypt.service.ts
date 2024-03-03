@@ -10,4 +10,8 @@ export class EncryptService {
     const salt = this.configService.get<string>('encrypt.salt');
     return await bcrpyt.hash(key, Number(salt));
   }
+
+  async compare(key: string, hashedKey: string): Promise<boolean> {
+    return await bcrpyt.compare(key, hashedKey);
+  }
 }
