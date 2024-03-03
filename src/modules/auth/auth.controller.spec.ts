@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.contoller';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
+import { SignInDto } from './dto/signin.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -10,6 +11,8 @@ describe('AuthController', () => {
     signup: jest.fn((signUpDto: SignUpDto) => {
       return { accessToken: 'accessToken', refreshToken: 'refreshToken' };
     }),
+
+    signin: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -51,6 +54,17 @@ describe('AuthController', () => {
           refreshToken: expect.any(String),
         }),
       );
+    });
+  });
+
+  describe('signin', () => {
+    const mockSignInDto: SignInDto = {
+      email: 'test@email.com',
+      password: 'test_password',
+    };
+
+    it('should be defined', () => {
+      expect(controller.signin).toBeDefined();
     });
   });
 });

@@ -6,6 +6,7 @@ import { SignUpDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '../../library/cache/cache.redis.service';
+import { SignInDto } from './dto/signin.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -185,6 +186,17 @@ describe('AuthService', () => {
           }),
         );
       });
+    });
+  });
+
+  describe('signin', () => {
+    const mockSignInDto: SignInDto = {
+      email: 'test@email.com',
+      password: 'test_password',
+    };
+
+    it('should be defined', () => {
+      expect(service.signin).toBeDefined();
     });
   });
 });
