@@ -55,4 +55,18 @@ describe('EncryptService', () => {
       expect(isMatch).toBe(true);
     });
   });
+
+  describe('compare', () => {
+    it('should be defined', () => {
+      expect(service.compare).toBeDefined();
+    });
+
+    it('should return boolean', async () => {
+      const key = 'un_encrypted key';
+      const hashedKey = await service.hash(key);
+      const isMatch = await bcrypt.compare(key, hashedKey);
+
+      expect(typeof isMatch).toBe('boolean');
+    });
+  });
 });
