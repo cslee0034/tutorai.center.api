@@ -3,9 +3,36 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/entities/user.entity';
 import { SignUpDto } from './dto/signup.dto';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
+
+  const mockConfigService = {
+    get: jest.fn((key: string): number | string => {
+      if (typeof key === 'string') {
+        return key;
+      }
+
+      return key;
+    }),
+  };
+
+  interface Payload {
+    userId: number;
+    email: string;
+  }
+  interface SignOption {
+    secret: string;
+    expiresIn: string;
+  }
+  const mockJwtService = {
+    signAsync: jest.fn((payload: Payload, signOption: SignOption) => {
+      const token = `${payload.userId}_${payload.email}_${signOption.secret}_${signOption.expiresIn}`;
+      return Promise.resolve(token);
+    }),
+  };
 
   const mockUsersService = {
     create: jest.fn(({ email, name, password }: SignUpDto) => {
@@ -18,6 +45,14 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         {
+          provide: ConfigService,
+          useValue: mockConfigService,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
+        },
+        {
           provide: UsersService,
           useValue: mockUsersService,
         },
@@ -29,6 +64,55 @@ describe('AuthService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('generateToken', () => {
+    it('should called with signAsync function', async () => {
+      const userId = 1;
+      const email = 'example@email.com';
+      const accessSecret = 'jwt.access.secret';
+      const accessExpiresIn = 'jwt.access.expiresIn';
+      const refreshSecret = 'jwt.refresh.secret';
+      const refreshExpiresIn = 'jwt.refresh.expiresIn';
+
+      await service.generateToken(userId, email);
+
+      expect(mockJwtService.signAsync).toBeCalledWith(
+        expect.objectContaining({
+          sub: userId,
+          email: email,
+        }),
+        expect.objectContaining({
+          secret: accessSecret,
+          expiresIn: accessExpiresIn,
+        }),
+      );
+
+      expect(mockJwtService.signAsync).toBeCalledWith(
+        expect.objectContaining({
+          sub: userId,
+          email: email,
+        }),
+        expect.objectContaining({
+          secret: refreshSecret,
+          expiresIn: refreshExpiresIn,
+        }),
+      );
+    });
+
+    it('should return token strings object', async () => {
+      const userId = 1;
+      const email = 'example@email.com';
+
+      const tokens = await service.generateToken(userId, email);
+
+      expect(tokens).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        }),
+      );
+    });
   });
 
   describe('singup', () => {
