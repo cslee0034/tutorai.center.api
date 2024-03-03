@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { Tokens } from './types/tokens.type';
+import { RedisService } from '../../library/cache/cache.redis.service';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly redisService: RedisService,
   ) {}
 
   async generateToken(userId: number, email: string): Promise<Tokens> {
@@ -44,6 +46,12 @@ export class AuthService {
     const createdUser = await this.usersService.create(signUpDto);
 
     const tokens = await this.generateToken(createdUser.id, createdUser.email);
+
+    this.redisService.set(
+      `refreshToken_${createdUser.id}`,
+      tokens.refreshToken,
+      this.configService.get<number>('jwt.refresh.expiresIn'),
+    );
 
     return tokens;
   }
