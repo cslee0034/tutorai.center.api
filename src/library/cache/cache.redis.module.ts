@@ -14,4 +14,4 @@ import { getRedisConfig } from '../../config/redis';
     }),
   ],
 })
-export class CacheRedisModule {}
+export class CacheModule {}
