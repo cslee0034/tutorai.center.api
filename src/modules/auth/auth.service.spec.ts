@@ -38,13 +38,17 @@ describe('AuthService', () => {
   };
 
   const mockRedisService = {
-    set: jest.fn(),
+    set: jest.fn(async (): Promise<void> => {
+      return Promise.resolve();
+    }),
   };
 
   const mockUsersService = {
-    create: jest.fn(({ email, name, password }: SignUpDto) => {
-      return new UserEntity({ email, name, password });
-    }),
+    create: jest.fn(
+      ({ email, name, password }: SignUpDto): Promise<UserEntity> => {
+        return Promise.resolve(new UserEntity({ email, name, password }));
+      },
+    ),
   };
 
   beforeEach(async () => {
@@ -164,6 +168,16 @@ describe('AuthService', () => {
           accessToken: expect.any(String),
           refreshToken: expect.any(String),
         }),
+      );
+    });
+
+    it('should throw error if caching is failed', async () => {
+      mockRedisService.set.mockRejectedValueOnce(
+        new Error('Failed to save token'),
+      );
+
+      await expect(service.signup(mockSignUpDto)).rejects.toThrow(
+        'Failed to save token',
       );
     });
   });
