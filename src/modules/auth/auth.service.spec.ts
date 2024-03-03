@@ -5,6 +5,7 @@ import { UserEntity } from '../users/entities/user.entity';
 import { SignUpDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { RedisService } from '../../library/cache/cache.redis.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -36,6 +37,10 @@ describe('AuthService', () => {
     ),
   };
 
+  const mockRedisService = {
+    set: jest.fn(),
+  };
+
   const mockUsersService = {
     create: jest.fn(({ email, name, password }: SignUpDto) => {
       return new UserEntity({ email, name, password });
@@ -53,6 +58,10 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: mockJwtService,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
         },
         {
           provide: UsersService,
