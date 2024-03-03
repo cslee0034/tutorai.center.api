@@ -59,7 +59,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signin(signInDto: SignInDto) {
+  async signin(signInDto: SignInDto): Promise<Tokens> {
     const existingUser = await this.usersService.findOneByEmail(
       signInDto.email,
     );
@@ -83,6 +83,11 @@ export class AuthService {
       );
     }
 
-    return;
+    const tokens = await this.generateToken(
+      existingUser.id,
+      existingUser.email,
+    );
+
+    return tokens;
   }
 }
