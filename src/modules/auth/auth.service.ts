@@ -57,7 +57,17 @@ export class AuthService {
     return tokens;
   }
 
-  signin(signInDto: SignInDto) {
+  async signin(signInDto: SignInDto) {
+    const existingUser = await this.usersService.findOneByEmail(
+      signInDto.email,
+    );
+
+    if (!existingUser) {
+      throw new HttpException(
+        'User not have been created',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     return;
   }
 }
