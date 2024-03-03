@@ -28,10 +28,12 @@ describe('AuthService', () => {
     expiresIn: string;
   }
   const mockJwtService = {
-    signAsync: jest.fn((payload: Payload, signOption: SignOption) => {
-      const token = `${payload.userId}_${payload.email}_${signOption.secret}_${signOption.expiresIn}`;
-      return Promise.resolve(token);
-    }),
+    signAsync: jest.fn(
+      (payload: Payload, signOption: SignOption): Promise<string> => {
+        const token = `${payload.userId}_${payload.email}_${signOption.secret}_${signOption.expiresIn}`;
+        return Promise.resolve(token);
+      },
+    ),
   };
 
   const mockUsersService = {
@@ -130,6 +132,17 @@ describe('AuthService', () => {
       await service.signup(mockSignUpDto);
 
       expect(mockUsersService.create).toBeCalled();
+    });
+
+    it('should return token strings object', async () => {
+      const tokens = await service.signup(mockSignUpDto);
+
+      expect(tokens).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        }),
+      );
     });
   });
 });
