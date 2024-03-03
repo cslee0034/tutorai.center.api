@@ -14,6 +14,8 @@ describe('AuthController', () => {
     }),
 
     signin: jest.fn(),
+
+    logout: jest.fn(),
   };
 
   const mockEncryptService = {
@@ -84,6 +86,20 @@ describe('AuthController', () => {
       await controller.signin(mockSignInDto as SignInDto);
 
       expect(mockAuthSerivce.signin).toBeCalledWith(mockSignInDto);
+    });
+  });
+
+  describe('signin', () => {
+    const userId = 0;
+
+    it('should be defined', () => {
+      expect(controller.logout).toBeDefined();
+    });
+
+    it('should be called with userId', async () => {
+      await controller.logout(userId);
+
+      expect(mockAuthSerivce.logout).toBeCalledWith(userId);
     });
   });
 });

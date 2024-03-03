@@ -43,6 +43,8 @@ describe('AuthService', () => {
     set: jest.fn(async (): Promise<void> => {
       return Promise.resolve();
     }),
+
+    del: jest.fn(),
   };
 
   const mockUsersService = {
@@ -189,6 +191,28 @@ describe('AuthService', () => {
           refreshToken: expect.any(String),
         }),
       );
+    });
+  });
+
+  describe('logout', () => {
+    const userId = 0;
+
+    it('should be defined', () => {
+      expect(service.logout).toBeDefined();
+    });
+
+    it('should call redisService.del function', async () => {
+      await service.logout(userId);
+
+      expect(mockRedisService.del).toBeCalledWith(
+        `${mockConfigService.get('jwt.refresh.prefix')}${userId}`,
+      );
+    });
+
+    it('should throw error if del function fails', async () => {
+      mockRedisService.del.mockRejectedValueOnce(new Error('Failed to logout'));
+
+      await expect(service.logout(userId)).rejects.toThrow('Failed to logout');
     });
   });
 
