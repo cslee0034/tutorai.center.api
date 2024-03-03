@@ -50,6 +50,13 @@ describe('AuthService', () => {
         return Promise.resolve(new UserEntity({ email, name, password }));
       },
     ),
+
+    findOneByEmail: jest.fn((email: string) => {
+      if (email === 'not_existing@email.com') {
+        return null;
+      }
+      return Promise.resolve(new UserEntity({ email }));
+    }),
   };
 
   beforeEach(async () => {
@@ -197,6 +204,25 @@ describe('AuthService', () => {
 
     it('should be defined', () => {
       expect(service.signin).toBeDefined();
+    });
+
+    it('should call findOneByEmail', async () => {
+      await service.signin(mockSignInDto);
+
+      expect(mockUsersService.findOneByEmail).toBeCalledWith(
+        mockSignInDto.email,
+      );
+    });
+
+    it('should throw error if there is no existing user', async () => {
+      const mockSignInDto: SignInDto = {
+        email: 'not_existing@email.com',
+        password: 'test_password',
+      };
+
+      await expect(service.signin(mockSignInDto)).rejects.toThrow(
+        'User not have been created',
+      );
     });
   });
 });
