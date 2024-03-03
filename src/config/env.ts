@@ -36,6 +36,7 @@ export const env = () => ({
     refresh: {
       secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+      prefix: process.env.JWT_REFRESH_PREFIX,
     },
   },
 });
