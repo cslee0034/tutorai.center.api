@@ -8,7 +8,7 @@ describe('AuthController', () => {
 
   const mockAuthSerivce = {
     signup: jest.fn((signUpDto: SignUpDto) => {
-      return;
+      return { accessToken: 'accessToken', refreshToken: 'refreshToken' };
     }),
   };
 
@@ -40,6 +40,17 @@ describe('AuthController', () => {
       await controller.signup(mockSignUpDto as SignUpDto);
 
       expect(mockAuthSerivce.signup).toBeCalledWith(mockSignUpDto);
+    });
+
+    it('should return token strings object', async () => {
+      const tokens = await controller.signup(mockSignUpDto);
+
+      expect(tokens).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        }),
+      );
     });
   });
 });
