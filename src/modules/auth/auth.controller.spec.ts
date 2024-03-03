@@ -3,6 +3,7 @@ import { AuthController } from './auth.contoller';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signin.dto';
+import { EncryptService } from '../encrypt/encrypt.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -15,10 +16,22 @@ describe('AuthController', () => {
     signin: jest.fn(),
   };
 
+  const mockEncryptService = {
+    compare: jest.fn((key: string, hashedKey: string) => {
+      if (hashedKey === 'hashed_' + key) {
+        return true;
+      }
+      return false;
+    }),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: mockAuthSerivce }],
+      providers: [
+        { provide: AuthService, useValue: mockAuthSerivce },
+        { provide: EncryptService, useValue: mockEncryptService },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

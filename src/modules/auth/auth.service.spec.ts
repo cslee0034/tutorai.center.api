@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '../../library/cache/cache.redis.service';
 import { SignInDto } from './dto/signin.dto';
+import { EncryptService } from '../encrypt/encrypt.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -55,7 +56,18 @@ describe('AuthService', () => {
       if (email === 'not_existing@email.com') {
         return null;
       }
-      return Promise.resolve(new UserEntity({ email }));
+      return Promise.resolve(
+        new UserEntity({ email, password: 'hashed_test_password' }),
+      );
+    }),
+  };
+
+  const mockEncryptService = {
+    compare: jest.fn((key: string, hashedKey: string) => {
+      if (hashedKey === 'hashed_' + key) {
+        return true;
+      }
+      return false;
     }),
   };
 
@@ -78,6 +90,10 @@ describe('AuthService', () => {
         {
           provide: UsersService,
           useValue: mockUsersService,
+        },
+        {
+          provide: EncryptService,
+          useValue: mockEncryptService,
         },
       ],
     }).compile();
@@ -222,6 +238,23 @@ describe('AuthService', () => {
 
       await expect(service.signin(mockSignInDto)).rejects.toThrow(
         'User not have been created',
+      );
+    });
+
+    it('should call compare function', async () => {
+      await service.signin(mockSignInDto as SignInDto);
+
+      expect(mockEncryptService.compare).toBeCalled();
+    });
+
+    it('should throw error if password is not match', async () => {
+      const mockSignInDto: SignInDto = {
+        email: 'existing@email.com',
+        password: 'not_test_password',
+      };
+
+      await expect(service.signin(mockSignInDto)).rejects.toThrow(
+        `User's password do not match`,
       );
     });
   });
