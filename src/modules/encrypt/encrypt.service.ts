@@ -6,7 +6,7 @@ import * as bcrpyt from 'bcrypt';
 export class EncryptService {
   constructor(private readonly configService: ConfigService) {}
 
-  async hash(key: string) {
+  async hash(key: string): Promise<string> {
     const salt = this.configService.get<string>('encrypt.salt');
     return await bcrpyt.hash(key, Number(salt));
   }
