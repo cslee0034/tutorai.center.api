@@ -1,14 +1,14 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { JWTModule } from '../../library/token/jwt.module';
-import { JWTPassportModule } from '../../library/token/passport.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.contoller';
 import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
-  imports: [JWTModule, JWTPassportModule, forwardRef(() => UsersModule)],
+  imports: [JwtModule.register({}), forwardRef(() => UsersModule)],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
