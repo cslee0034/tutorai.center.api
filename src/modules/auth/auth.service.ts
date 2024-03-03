@@ -3,6 +3,7 @@ import { SignUpDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { Tokens } from './types/tokens.type';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async generateToken(userId: number, email: string) {
+  async generateToken(userId: number, email: string): Promise<Tokens> {
     const payload = {
       sub: userId,
       email: email,
@@ -32,7 +33,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async signup(signUpDto: SignUpDto) {
+  async signup(signUpDto: SignUpDto): Promise<Tokens> {
     const createdUser = await this.usersService.create(signUpDto);
 
     const tokens = await this.generateToken(createdUser.id, createdUser.email);
