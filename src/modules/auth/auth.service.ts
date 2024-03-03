@@ -34,6 +34,9 @@ export class AuthService {
 
   async signup(signUpDto: SignUpDto) {
     const createdUser = await this.usersService.create(signUpDto);
-    return createdUser;
+
+    const tokens = await this.generateToken(createdUser.id, createdUser.email);
+
+    return tokens;
   }
 }
