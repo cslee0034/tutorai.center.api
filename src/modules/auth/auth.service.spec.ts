@@ -117,6 +117,19 @@ describe('AuthService', () => {
     });
   });
 
+  it('should throw error if it fails to generate token', async () => {
+    const userId = 1;
+    const email = 'example@email.com';
+
+    mockJwtService.signAsync.mockRejectedValueOnce(
+      new Error('Failed to create token'),
+    );
+
+    await expect(service.generateToken(userId, email)).rejects.toThrow(
+      'Failed to create token',
+    );
+  });
+
   describe('singup', () => {
     const mockSignUpDto: SignUpDto = {
       email: 'test@email.com',
