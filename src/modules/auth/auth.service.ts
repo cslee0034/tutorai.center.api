@@ -18,39 +18,6 @@ export class AuthService {
     private readonly encryptService: EncryptService,
   ) {}
 
-  async generateToken(userId: number, email: string): Promise<Tokens> {
-    const payload = {
-      sub: userId,
-      email: email,
-    };
-
-    try {
-      const [accessToken, refreshToken] = await Promise.all([
-        this.jwtService.signAsync(payload, {
-          secret: this.configService.get<string>('jwt.access.secret'),
-          expiresIn: this.configService.get<string>('jwt.access.expiresIn'),
-        }),
-        this.jwtService.signAsync(payload, {
-          secret: this.configService.get<string>('jwt.refresh.secret'),
-          expiresIn: this.configService.get<string>('jwt.refresh.expiresIn'),
-        }),
-      ]);
-
-      await this.redisService.set(
-        `refreshToken_${userId}`,
-        refreshToken,
-        this.configService.get<number>('jwt.refresh.expiresIn'),
-      );
-
-      return { accessToken, refreshToken };
-    } catch (error) {
-      throw new HttpException(
-        'Failed to create token',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
   async signup(signUpDto: SignUpDto): Promise<Tokens> {
     const createdUser = await this.usersService.create(signUpDto);
 
@@ -89,5 +56,38 @@ export class AuthService {
     );
 
     return tokens;
+  }
+
+  async generateToken(userId: number, email: string): Promise<Tokens> {
+    const payload = {
+      sub: userId,
+      email: email,
+    };
+
+    try {
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.signAsync(payload, {
+          secret: this.configService.get<string>('jwt.access.secret'),
+          expiresIn: this.configService.get<string>('jwt.access.expiresIn'),
+        }),
+        this.jwtService.signAsync(payload, {
+          secret: this.configService.get<string>('jwt.refresh.secret'),
+          expiresIn: this.configService.get<string>('jwt.refresh.expiresIn'),
+        }),
+      ]);
+
+      await this.redisService.set(
+        `refreshToken_${userId}`,
+        refreshToken,
+        this.configService.get<number>('jwt.refresh.expiresIn'),
+      );
+
+      return { accessToken, refreshToken };
+    } catch (error) {
+      throw new HttpException(
+        'Failed to create token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
