@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { Tokens } from './types/tokens.type';
 import { RedisService } from '../../library/cache/cache.redis.service';
+import { SignInDto } from './dto/signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -54,5 +55,9 @@ export class AuthService {
     const tokens = await this.generateToken(createdUser.id, createdUser.email);
 
     return tokens;
+  }
+
+  signin(signInDto: SignInDto) {
+    return;
   }
 }
