@@ -51,7 +51,7 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create user', () => {
+  describe('create', () => {
     const mockCreateUserDto: CreateUserDto = {
       email: 'test@email.com',
       name: 'test_name',
@@ -115,6 +115,36 @@ describe('UsersService', () => {
       const user = await service.create(mockCreateUserDto as CreateUserDto);
 
       expect(user).toBeInstanceOf(UserEntity);
+    });
+  });
+
+  describe('findOneByEmail', () => {
+    const email = 'test@email.com';
+
+    it('should be defined', () => {
+      expect(service.findOneByEmail).toBeDefined();
+    });
+
+    it('should call findOneByEmail', async () => {
+      await service.findOneByEmail(email as string);
+
+      expect(mockUserRepository.findOneByEmail).toBeCalledWith(email);
+    });
+
+    it('should return null if user is not exists', async () => {
+      const email = 'not_existing@email.com';
+
+      const result = await service.findOneByEmail(email);
+
+      expect(result).toBe(null);
+    });
+
+    it('should return user entity if user exists', async () => {
+      const email = 'existing@email.com';
+
+      const result = await service.findOneByEmail(email);
+
+      expect(result).toBeInstanceOf(UserEntity);
     });
   });
 });
