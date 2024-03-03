@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SignUpDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -19,18 +19,25 @@ export class AuthService {
       email: email,
     };
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('jwt.access.secret'),
-        expiresIn: this.configService.get<string>('jwt.access.expiresIn'),
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('jwt.refresh.secret'),
-        expiresIn: this.configService.get<string>('jwt.refresh.expiresIn'),
-      }),
-    ]);
+    try {
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.signAsync(payload, {
+          secret: this.configService.get<string>('jwt.access.secret'),
+          expiresIn: this.configService.get<string>('jwt.access.expiresIn'),
+        }),
+        this.jwtService.signAsync(payload, {
+          secret: this.configService.get<string>('jwt.refresh.secret'),
+          expiresIn: this.configService.get<string>('jwt.refresh.expiresIn'),
+        }),
+      ]);
 
-    return { accessToken, refreshToken };
+      return { accessToken, refreshToken };
+    } catch (error) {
+      throw new HttpException(
+        'Failed to create token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async signup(signUpDto: SignUpDto): Promise<Tokens> {
