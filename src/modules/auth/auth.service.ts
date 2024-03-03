@@ -47,12 +47,19 @@ export class AuthService {
 
     const tokens = await this.generateToken(createdUser.id, createdUser.email);
 
-    this.redisService.set(
-      `refreshToken_${createdUser.id}`,
-      tokens.refreshToken,
-      this.configService.get<number>('jwt.refresh.expiresIn'),
-    );
+    try {
+      await this.redisService.set(
+        `refreshToken_${createdUser.id}`,
+        tokens.refreshToken,
+        this.configService.get<number>('jwt.refresh.expiresIn'),
+      );
 
-    return tokens;
+      return tokens;
+    } catch (error) {
+      throw new HttpException(
+        'Failed to save token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
