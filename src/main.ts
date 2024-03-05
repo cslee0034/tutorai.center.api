@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter';
 import { httpExceptionFilter } from './common/filters/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SuccessInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -52,6 +53,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new SuccessInterceptor());
   app.useGlobalFilters(
     new PrismaClientExceptionFilter(logger),
     new httpExceptionFilter(logger),
