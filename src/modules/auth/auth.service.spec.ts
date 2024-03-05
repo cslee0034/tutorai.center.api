@@ -198,6 +198,21 @@ describe('AuthService', () => {
     });
   });
 
+  describe('login', () => {
+    const test_login_id = 0;
+    const test_login_token = 'test_token';
+
+    it('should be defined', () => {
+      expect(service.login).toBeDefined();
+    });
+
+    it('should call redis.set function', async () => {
+      await service.login(test_login_id, test_login_token);
+
+      expect(mockRedisService.set).toBeCalled();
+    });
+  });
+
   describe('logout', () => {
     const userId = 0;
 
@@ -205,7 +220,7 @@ describe('AuthService', () => {
       expect(service.logout).toBeDefined();
     });
 
-    it('should call redisService.del function', async () => {
+    it('should call redis.del function', async () => {
       await service.logout(userId);
 
       expect(mockRedisService.del).toBeCalledWith(
@@ -287,21 +302,6 @@ describe('AuthService', () => {
       await expect(service.generateToken(id, email)).rejects.toThrow(
         InternalServerErrorException,
       );
-    });
-  });
-
-  describe('login', () => {
-    const test_login_id = 0;
-    const test_login_token = 'test_token';
-
-    it('should be defined', () => {
-      expect(service.login).toBeDefined();
-    });
-
-    it('should call redis.set function', async () => {
-      await service.login(test_login_id, test_login_token);
-
-      expect(mockRedisService.set).toBeCalled();
     });
   });
 });
