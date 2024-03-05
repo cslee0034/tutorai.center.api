@@ -23,6 +23,8 @@ export class AuthController {
       createdUser.email,
     );
 
+    await this.authService.login(createdUser.id, tokens.refreshToken);
+
     return tokens;
   }
 

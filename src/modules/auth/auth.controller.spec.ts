@@ -15,6 +15,10 @@ describe('AuthController', () => {
 
     signin: jest.fn(),
 
+    login: jest.fn(() => {
+      return true;
+    }),
+
     logout: jest.fn(),
 
     generateToken: jest.fn((userId: number, email: string) => {
@@ -84,6 +88,12 @@ describe('AuthController', () => {
         1,
         'example@email.com',
       );
+    });
+
+    it("should call login with user's id and refreshToken", async () => {
+      await controller.signup(mockSignUpDto);
+
+      expect(mockAuthSerivce.login).toBeCalledWith(1, 'refreshToken');
     });
   });
 });
