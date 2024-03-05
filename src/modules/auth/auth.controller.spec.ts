@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
 import { EncryptService } from '../encrypt/encrypt.service';
+import { UsersService } from '../users/users.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -15,6 +16,15 @@ describe('AuthController', () => {
     signin: jest.fn(),
 
     logout: jest.fn(),
+  };
+
+  const mockUsersService = {
+    create: jest.fn(() => {
+      return {
+        id: 1,
+        email: 'example@email.com',
+      };
+    }),
   };
 
   const mockEncryptService = {
@@ -31,6 +41,7 @@ describe('AuthController', () => {
       controllers: [AuthController],
       providers: [
         { provide: AuthService, useValue: mockAuthSerivce },
+        { provide: UsersService, useValue: mockUsersService },
         { provide: EncryptService, useValue: mockEncryptService },
       ],
     }).compile();
@@ -51,6 +62,12 @@ describe('AuthController', () => {
 
     it('should be defined', () => {
       expect(controller.signup).toBeDefined();
+    });
+
+    it('should call userService.create with SignUpDto', async () => {
+      await controller.signup(mockSignUpDto);
+
+      expect(mockUsersService.create).toBeCalledWith(mockSignUpDto);
     });
   });
 });
