@@ -10,6 +10,11 @@ import { GetTokenUserId } from '../../common/decorator/get-token-user-id.decorat
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('local/signup')
+  async signup(@Body() signUpDto: SignUpDto) {
+    return;
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Get('logout')
   logout(@GetTokenUserId() userId: number): Promise<{ success: true }> {
