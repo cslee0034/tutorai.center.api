@@ -16,6 +16,13 @@ describe('AuthController', () => {
     signin: jest.fn(),
 
     logout: jest.fn(),
+
+    generateToken: jest.fn((userId: number, email: string) => {
+      return {
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+      };
+    }),
   };
 
   const mockUsersService = {
@@ -68,6 +75,15 @@ describe('AuthController', () => {
       await controller.signup(mockSignUpDto);
 
       expect(mockUsersService.create).toBeCalledWith(mockSignUpDto);
+    });
+
+    it('should call generateToken with created user information', async () => {
+      await controller.signup(mockSignUpDto);
+
+      expect(mockAuthSerivce.generateToken).toBeCalledWith(
+        1,
+        'example@email.com',
+      );
     });
   });
 });

@@ -17,7 +17,13 @@ export class AuthController {
   @Post('local/signup')
   async signup(@Body() signUpDto: SignUpDto) {
     const createdUser = await this.usersService.create(signUpDto);
-    return;
+
+    const tokens = await this.authService.generateToken(
+      createdUser.id,
+      createdUser.email,
+    );
+
+    return tokens;
   }
 
   @UseGuards(AuthGuard('jwt'))
