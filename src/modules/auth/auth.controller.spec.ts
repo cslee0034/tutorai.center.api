@@ -41,4 +41,16 @@ describe('AuthController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  describe('signup', () => {
+    const mockSignUpDto: SignUpDto = {
+      email: 'test@email.com',
+      name: 'test_name',
+      password: 'test_password',
+    };
+
+    it('should be defined', () => {
+      expect(controller.signup).toBeDefined();
+    });
+  });
 });
