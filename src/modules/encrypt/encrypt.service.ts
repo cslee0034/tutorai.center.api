@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrpyt from 'bcrypt';
 
@@ -7,11 +11,19 @@ export class EncryptService {
   constructor(private readonly configService: ConfigService) {}
 
   async hash(key: string): Promise<string> {
-    const salt = this.configService.get<string>('encrypt.salt');
-    return await bcrpyt.hash(key, Number(salt));
+    try {
+      const salt = this.configService.get<string>('encrypt.salt');
+      return await bcrpyt.hash(key, Number(salt));
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to hash key');
+    }
   }
 
   async compare(key: string, hashedKey: string): Promise<boolean> {
-    return await bcrpyt.compare(key, hashedKey);
+    try {
+      return await bcrpyt.compare(key, hashedKey);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to compare key');
+    }
   }
 }
