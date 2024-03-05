@@ -72,9 +72,9 @@ export class AuthService {
     return { success: true };
   }
 
-  async generateToken(userId: number, email: string): Promise<Tokens> {
+  async generateToken(id: number, email: string): Promise<Tokens> {
     const payload = {
-      sub: userId,
+      id: id,
       email: email,
     };
 
@@ -91,7 +91,7 @@ export class AuthService {
       ]);
 
       await this.redisService.set(
-        `${this.configService.get<number>('jwt.refresh.prefix')}${userId}`,
+        `${this.configService.get<number>('jwt.refresh.prefix')}${id}`,
         refreshToken,
         this.configService.get<number>('jwt.refresh.expiresIn'),
       );

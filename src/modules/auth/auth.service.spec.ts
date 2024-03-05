@@ -224,18 +224,18 @@ describe('AuthService', () => {
     };
 
     it('should called with signAsync function', async () => {
-      const userId = 1;
+      const id = 1;
       const email = mockSignUpDto.email;
       const accessSecret = 'jwt.access.secret';
       const accessExpiresIn = 'jwt.access.expiresIn';
       const refreshSecret = 'jwt.refresh.secret';
       const refreshExpiresIn = 'jwt.refresh.expiresIn';
 
-      await service.generateToken(userId, email);
+      await service.generateToken(id, email);
 
       expect(mockJwtService.signAsync).toBeCalledWith(
         expect.objectContaining({
-          sub: userId,
+          id: id,
           email: email,
         }),
         expect.objectContaining({
@@ -246,7 +246,7 @@ describe('AuthService', () => {
 
       expect(mockJwtService.signAsync).toBeCalledWith(
         expect.objectContaining({
-          sub: userId,
+          id: id,
           email: mockSignUpDto.email,
         }),
         expect.objectContaining({
@@ -257,10 +257,10 @@ describe('AuthService', () => {
     });
 
     it('should return token strings object', async () => {
-      const userId = 1;
+      const id = 1;
       const email = mockSignUpDto.email;
 
-      const tokens = await service.generateToken(userId, email);
+      const tokens = await service.generateToken(id, email);
 
       expect(tokens).toEqual(
         expect.objectContaining({
@@ -271,14 +271,14 @@ describe('AuthService', () => {
     });
 
     it('should throw error if it fails to generate token', async () => {
-      const userId = 1;
+      const id = 1;
       const email = 'example@email.com';
 
       mockJwtService.signAsync.mockRejectedValueOnce(
         new Error('Failed to create token'),
       );
 
-      await expect(service.generateToken(userId, email)).rejects.toThrow(
+      await expect(service.generateToken(id, email)).rejects.toThrow(
         'Failed to create token',
       );
     });

@@ -5,6 +5,6 @@ export const GetTokenUserId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): number => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as Payload;
-    return user.sub;
+    return user.id;
   },
 );
