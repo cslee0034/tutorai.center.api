@@ -289,4 +289,19 @@ describe('AuthService', () => {
       );
     });
   });
+
+  describe('login', () => {
+    const test_login_id = 0;
+    const test_login_token = 'test_token';
+
+    it('should be defined', () => {
+      expect(service.login).toBeDefined();
+    });
+
+    it('should call redis.set function', async () => {
+      await service.login(test_login_id, test_login_token);
+
+      expect(mockRedisService.set).toBeCalled();
+    });
+  });
 });
