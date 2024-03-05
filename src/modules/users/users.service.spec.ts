@@ -5,6 +5,10 @@ import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from '@prisma/client';
 import { EncryptService } from '../encrypt/encrypt.service';
+import {
+  ForbiddenException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -80,7 +84,7 @@ describe('UsersService', () => {
       // service.create()의 반환값인 promise를 테스트 대상으로 하여 내부에서 발생하는 예외를 확인한다
       await expect(
         service.create(mockCreateUserDto as CreateUserDto),
-      ).rejects.toThrow('User already exists');
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('should throw error if it fails to create user', async () => {
@@ -88,8 +92,9 @@ describe('UsersService', () => {
         new Error('Failed to create user'),
       );
 
+      // eslint-disable-next-line prettier/prettier
       await expect(service.create(mockCreateUserDto)).rejects.toThrow(
-        'Failed to create user',
+        InternalServerErrorException,
       );
     });
 

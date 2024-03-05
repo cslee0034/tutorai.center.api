@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignUpDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -32,10 +36,7 @@ export class AuthService {
     );
 
     if (!existingUser) {
-      throw new HttpException(
-        'User not have been created',
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new UnauthorizedException('User not have been created');
     }
 
     const isMatchingPassword = await this.encryptService.compare(
@@ -44,10 +45,7 @@ export class AuthService {
     );
 
     if (!isMatchingPassword) {
-      throw new HttpException(
-        `User's password do not match`,
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new UnauthorizedException(`User's password do not match`);
     }
 
     const tokens = await this.generateToken(
@@ -64,10 +62,7 @@ export class AuthService {
         `${this.configService.get<number>('jwt.refresh.prefix')}${userId}`,
       );
     } catch (error) {
-      throw new HttpException(
-        'Failed to logout',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException('Failed to logout');
     }
     return { success: true };
   }
@@ -98,10 +93,7 @@ export class AuthService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      throw new HttpException(
-        'Failed to create token',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException('Failed to create token');
     }
   }
 }

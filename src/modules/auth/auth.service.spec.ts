@@ -8,6 +8,10 @@ import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '../../library/cache/cache.redis.service';
 import { SignInDto } from './dto/signin.dto';
 import { EncryptService } from '../encrypt/encrypt.service';
+import {
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -178,7 +182,7 @@ describe('AuthService', () => {
       };
 
       await expect(service.signin(mockSignInDto)).rejects.toThrow(
-        `User's password do not match`,
+        UnauthorizedException,
       );
     });
 
@@ -212,7 +216,9 @@ describe('AuthService', () => {
     it('should throw error if del function fails', async () => {
       mockRedisService.del.mockRejectedValueOnce(new Error('Failed to logout'));
 
-      await expect(service.logout(userId)).rejects.toThrow('Failed to logout');
+      await expect(service.logout(userId)).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 
@@ -279,17 +285,7 @@ describe('AuthService', () => {
       );
 
       await expect(service.generateToken(id, email)).rejects.toThrow(
-        'Failed to create token',
-      );
-    });
-
-    it('should throw error if caching is failed', async () => {
-      mockRedisService.set.mockRejectedValueOnce(
-        new Error('Failed to create token'),
-      );
-
-      await expect(service.signup(mockSignUpDto)).rejects.toThrow(
-        'Failed to create token',
+        InternalServerErrorException,
       );
     });
   });

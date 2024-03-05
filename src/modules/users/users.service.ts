@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './users.repository';
@@ -18,7 +24,7 @@ export class UsersService {
     );
 
     if (existingUser) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new ForbiddenException('User already exists');
     }
 
     try {
@@ -28,10 +34,7 @@ export class UsersService {
 
       return new UserEntity(await this.userRepository.create(createUserDto));
     } catch (error) {
-      throw new HttpException(
-        'Failed to create user',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new InternalServerErrorException('Failed to create user');
     }
   }
 
