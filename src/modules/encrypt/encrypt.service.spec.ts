@@ -2,6 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EncryptService } from './encrypt.service';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
+
+jest.mock('bcrypt', () => ({
+  hash: jest.fn((key) => {
+    return 'hashed_' + key;
+  }),
+  compare: jest.fn((key, hashedKey) => {
+    if (hashedKey === 'hashed_' + key) {
+      return true;
+    }
+
+    return false;
+  }),
+}));
 
 describe('EncryptService', () => {
   let service: EncryptService;
@@ -54,6 +68,14 @@ describe('EncryptService', () => {
 
       expect(isMatch).toBe(true);
     });
+
+    it('should throw InternalServerErrorException if hash fails', async () => {
+      bcrypt.hash.mockRejectedValueOnce(new Error('Failed to hash key'));
+
+      await expect(service.hash(key)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
   });
 
   describe('compare', () => {
@@ -67,6 +89,14 @@ describe('EncryptService', () => {
       const isMatch = await bcrypt.compare(key, hashedKey);
 
       expect(typeof isMatch).toBe('boolean');
+    });
+
+    it('should throw InternalServerErrorException if compare fails', async () => {
+      bcrypt.compare.mockRejectedValueOnce(new Error('Failed to compare key'));
+
+      await expect(service.compare('key', 'hashed_key')).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 });
