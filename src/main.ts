@@ -4,7 +4,6 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
-import { Limiter } from './config/limiter';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter';
 import { httpExceptionFilter } from './common/filters/http-exception.filter';
 import { HttpAdapterHost } from '@nestjs/core';
@@ -53,7 +52,6 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
-  app.use(new Limiter());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(
     new PrismaClientExceptionFilter(logger),
