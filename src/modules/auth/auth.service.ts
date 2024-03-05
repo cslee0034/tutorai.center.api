@@ -85,15 +85,22 @@ export class AuthService {
         }),
       ]);
 
+      return { accessToken, refreshToken };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create token');
+    }
+  }
+
+  async login(id: number, refreshToken: string): Promise<boolean> {
+    try {
       await this.redisService.set(
         `${this.configService.get<number>('jwt.refresh.prefix')}${id}`,
         refreshToken,
         this.configService.get<number>('jwt.refresh.expiresIn'),
       );
-
-      return { accessToken, refreshToken };
+      return true;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create token');
+      throw new InternalServerErrorException('Failed to set refresh token');
     }
   }
 }
