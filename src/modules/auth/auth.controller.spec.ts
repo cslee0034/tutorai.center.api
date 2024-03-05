@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
+import { SignUpDto } from './dto/request/signup.dto';
 import { EncryptService } from '../encrypt/encrypt.service';
 import { UsersService } from '../users/users.service';
+import { LoginDto } from './dto/request/login.dto';
+import { UserEntity } from '../users/entities/user.entity';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -36,6 +38,16 @@ describe('AuthController', () => {
         email: 'example@email.com',
       };
     }),
+
+    findOneByEmail: jest.fn((email: string) => {
+      if (email === 'test@email.com') {
+        return new UserEntity({
+          id: 2,
+          email: 'test@email.com',
+          name: 'test_name',
+        });
+      }
+    }),
   };
 
   const mockEncryptService = {
@@ -45,6 +57,8 @@ describe('AuthController', () => {
       }
       return false;
     }),
+
+    compareAndThrow: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -94,6 +108,40 @@ describe('AuthController', () => {
       await controller.signup(mockSignUpDto);
 
       expect(mockAuthSerivce.login).toBeCalledWith(1, 'refreshToken');
+    });
+  });
+
+  describe('login', () => {
+    const loginDto: LoginDto = {
+      email: 'test@email.com',
+      password: 'test_password',
+    };
+    it('should be defined', () => {
+      expect(controller.login).toBeDefined();
+    });
+
+    it('should call userService.findOneByEmail with LoginUpDto', async () => {
+      await controller.login(loginDto);
+
+      expect(mockUsersService.findOneByEmail).toBeCalledWith(loginDto.email);
+    });
+
+    it("should call generateToken with found user's information", async () => {
+      await controller.login(loginDto);
+
+      expect(mockAuthSerivce.generateToken).toBeCalledWith(2, 'test@email.com');
+    });
+
+    it("should call generateToken with found user's information", async () => {
+      await controller.login(loginDto);
+
+      expect(mockAuthSerivce.generateToken).toBeCalledWith(2, 'test@email.com');
+    });
+
+    it("should call login with user's id and refreshToken", async () => {
+      await controller.login(loginDto);
+
+      expect(mockAuthSerivce.login).toBeCalledWith(2, 'refreshToken');
     });
   });
 });

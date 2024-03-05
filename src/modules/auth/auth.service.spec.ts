@@ -2,16 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/entities/user.entity';
-import { SignUpDto } from './dto/signup.dto';
+import { SignUpDto } from './dto/request/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '../../library/cache/cache.redis.service';
-import { SignInDto } from './dto/signin.dto';
 import { EncryptService } from '../encrypt/encrypt.service';
-import {
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
