@@ -26,4 +26,12 @@ export class EncryptService {
       throw new InternalServerErrorException('Failed to compare key');
     }
   }
+
+  async compareAndThrow(key: string, hashedKey: string): Promise<void> {
+    const isSame = await this.compare(key, hashedKey);
+    if (!isSame) {
+      throw new UnauthorizedException('Key does not match');
+    }
+    return;
+  }
 }

@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EncryptService } from './encrypt.service';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { HttpException, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn((key) => {
@@ -15,6 +19,8 @@ jest.mock('bcrypt', () => ({
 
     return false;
   }),
+
+  compareAndThrow: jest.fn(),
 }));
 
 describe('EncryptService', () => {
@@ -97,6 +103,18 @@ describe('EncryptService', () => {
       await expect(service.compare('key', 'hashed_key')).rejects.toThrow(
         InternalServerErrorException,
       );
+    });
+  });
+
+  describe('compareAndThrow', () => {
+    it('should be defined', () => {
+      expect(service.compareAndThrow).toBeDefined();
+    });
+
+    it('should throw UnauthorizedException if compare fails', async () => {
+      await expect(
+        service.compareAndThrow('key', 'not_hashed_key'),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });
