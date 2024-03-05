@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/request/signup.dto';
 import { Tokens } from './types/tokens.type';
@@ -7,6 +15,15 @@ import { GetTokenUserId } from '../../common/decorator/get-token-user-id.decorat
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/request/login.dto';
 import { EncryptService } from '../encrypt/encrypt.service';
+import {
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { TokensResponseDto } from './dto/response/token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +34,11 @@ export class AuthController {
   ) {}
 
   @Post('local/signup')
-  async signup(@Body() signUpDto: SignUpDto) {
+  @HttpCode(HttpStatus.CREATED)
+  @ApiCreatedResponse({ type: TokensResponseDto })
+  @ApiForbiddenResponse()
+  @ApiInternalServerErrorResponse()
+  async signup(@Body() signUpDto: SignUpDto): Promise<Tokens> {
     const createdUser = await this.usersService.create(signUpDto);
 
     const tokens = await this.authService.generateToken(
@@ -31,6 +52,11 @@ export class AuthController {
   }
 
   @Post('local/login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: TokensResponseDto })
+  @ApiNotFoundResponse()
+  @ApiUnauthorizedResponse()
+  @ApiInternalServerErrorResponse()
   async login(@Body() loginDto: LoginDto): Promise<Tokens> {
     const user = await this.usersService.findOneByEmail(loginDto.email);
 
@@ -45,7 +71,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('logout')
-  logout(@GetTokenUserId() userId: number): Promise<{ success: true }> {
-    return this.authService.logout(userId);
+  @HttpCode(HttpStatus.OK)
+  @ApiInternalServerErrorResponse()
+  async logout(@GetTokenUserId() id: number): Promise<{ success: boolean }> {
+    const success = await this.authService.logout(id);
+    return { success };
   }
 }

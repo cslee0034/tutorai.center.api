@@ -25,15 +25,15 @@ export class AuthService {
     }
   }
 
-  async logout(userId: number): Promise<{ success: true }> {
+  async logout(id: number): Promise<boolean> {
     try {
       await this.redisService.del(
-        `${this.configService.get<number>('jwt.refresh.prefix')}${userId}`,
+        `${this.configService.get<number>('jwt.refresh.prefix')}${id}`,
       );
+      return true;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to logout');
+      throw new InternalServerErrorException('Failed to delete refresh token');
     }
-    return { success: true };
   }
 
   async generateToken(id: number, email: string): Promise<Tokens> {
