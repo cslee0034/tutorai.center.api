@@ -6,7 +6,6 @@ import { json, urlencoded } from 'body-parser';
 import helmet from 'helmet';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter';
 import { httpExceptionFilter } from './common/filters/http-exception.filter';
-import { HttpAdapterHost } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -16,8 +15,8 @@ async function bootstrap() {
 
   const logger = app.get('winston');
   const configService = app.get(ConfigService);
-  const httpAdapterHost = app.get(HttpAdapterHost);
   const port = configService.get<number>('app.port');
+  const reflector = app.get(Reflector);
 
   const swaggerOptions = new DocumentBuilder()
     .setTitle(`${configService.get<string>('app.serverName')}`)
@@ -57,7 +56,7 @@ async function bootstrap() {
     new PrismaClientExceptionFilter(logger),
     new httpExceptionFilter(logger),
   );
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   await app.listen(port);
 
