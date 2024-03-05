@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -37,13 +38,13 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<UserEntity | null> {
-    const existingUser = await this.userRepository.findOneByEmail(email);
+    const existing = await this.userRepository.findOneByEmail(email);
 
-    if (existingUser) {
-      return new UserEntity(existingUser);
+    if (!existing) {
+      throw new NotFoundException('User not found');
     }
 
-    return null;
+    return new UserEntity(existing);
   }
 
   findAll() {
