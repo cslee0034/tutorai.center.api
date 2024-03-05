@@ -8,6 +8,7 @@ import { EncryptService } from '../encrypt/encrypt.service';
 import {
   ForbiddenException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 
 describe('UsersService', () => {
@@ -124,7 +125,7 @@ describe('UsersService', () => {
   });
 
   describe('findOneByEmail', () => {
-    const email = 'test@email.com';
+    const email = 'existing@email.com';
 
     it('should be defined', () => {
       expect(service.findOneByEmail).toBeDefined();
@@ -136,12 +137,12 @@ describe('UsersService', () => {
       expect(mockUserRepository.findOneByEmail).toBeCalledWith(email);
     });
 
-    it('should return null if user is not exists', async () => {
+    it('should throw error if user is not exists', async () => {
       const email = 'not_existing@email.com';
 
-      const result = await service.findOneByEmail(email);
-
-      expect(result).toBe(null);
+      await expect(service.findOneByEmail(email)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should return user entity if user exists', async () => {
